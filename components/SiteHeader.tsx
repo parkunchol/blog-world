@@ -19,18 +19,21 @@ export function SiteHeader({ user }: { user: User | null }) {
             href="/"
             className="truncate text-base font-bold text-[var(--text)] sm:text-lg"
           >
-            Tech Crunch Blog
-          </Link>
-          <Link href="/blog" className={`${link} shrink-0 sm:hidden`}>
-            글목록
+            moa.me
           </Link>
           <span className="hidden h-4 w-px bg-[var(--border)] sm:block" />
-          <nav className="hidden items-center gap-4 sm:flex">
+          <nav className="hidden flex-wrap items-center gap-x-4 gap-y-1 sm:flex">
             <Link href="/" className={link}>
               홈
             </Link>
-            <Link href="/blog" className={link}>
-              글 목록
+            <Link href="/stocks" className={link}>
+              주식
+            </Link>
+            <Link href="/tech" className={link}>
+              테크
+            </Link>
+            <Link href="/rankings" className={link}>
+              순위정보
             </Link>
           </nav>
         </div>

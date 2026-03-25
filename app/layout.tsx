@@ -14,10 +14,11 @@ const notoSansKr = Noto_Sans_KR({
 
 export const metadata: Metadata = {
   title: {
-    default: "Tech Crunch Blog",
-    template: "%s · Tech Crunch Blog",
+    default: "moa.me",
+    template: "%s · moa.me",
   },
-  description: "Supabase와 연동된 블로그입니다.",
+  description:
+    "주식, 테크, 드라마·영화·노래 순위 등 — moa.me 허브.",
 };
 
 export default async function RootLayout({

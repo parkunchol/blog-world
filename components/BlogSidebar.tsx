@@ -1,5 +1,8 @@
+"use client";
+
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { TaxonomyItem } from "@/lib/taxonomy";
 
 const navClass =
@@ -14,6 +17,10 @@ export function BlogSidebar({
   categories: TaxonomyItem[];
   tags: TaxonomyItem[];
 }) {
+  const pathname = usePathname();
+  const showBlogTaxonomy =
+    pathname === "/tech" || pathname.startsWith("/blog");
+
   const label =
     user?.user_metadata?.full_name ??
     user?.user_metadata?.name ??
@@ -24,9 +31,21 @@ export function BlogSidebar({
     <div className="space-y-3 lg:sticky lg:top-16">
       <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm">
         <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-muted)]">
-          블로그
+          moa.me
         </p>
-        <p className="mt-1 text-lg font-bold text-[var(--text)]">Tech Crunch Blog</p>
+        <p className="mt-1 text-lg font-bold text-[var(--text)]">허브</p>
+        {showBlogTaxonomy ? (
+          <p className="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
+            이 구간:{" "}
+            <span className="font-medium text-[var(--text)]">
+              Tech Crunch Blog
+            </span>
+          </p>
+        ) : (
+          <p className="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
+            주식 · 테크 · 순위정보
+          </p>
+        )}
         <div className="mt-4 border-t border-[var(--border)] pt-4">
           {user ? (
             <>
@@ -66,8 +85,18 @@ export function BlogSidebar({
             </Link>
           </li>
           <li>
-            <Link href="/blog" className={navClass}>
-              전체 글
+            <Link href="/stocks" className={navClass}>
+              주식
+            </Link>
+          </li>
+          <li>
+            <Link href="/tech" className={navClass}>
+              테크
+            </Link>
+          </li>
+          <li>
+            <Link href="/rankings" className={navClass}>
+              순위정보
             </Link>
           </li>
           <li>
@@ -81,7 +110,7 @@ export function BlogSidebar({
         </ul>
       </nav>
 
-      {categories.length > 0 ? (
+      {showBlogTaxonomy && categories.length > 0 ? (
         <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-sm">
           <p className="px-2 pb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
             카테고리
@@ -101,7 +130,7 @@ export function BlogSidebar({
         </div>
       ) : null}
 
-      {tags.length > 0 ? (
+      {showBlogTaxonomy && tags.length > 0 ? (
         <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-sm">
           <p className="px-2 pb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
             태그
