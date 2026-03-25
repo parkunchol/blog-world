@@ -11,7 +11,8 @@ export async function HomeDailyFortune() {
         <div>
           <h2 className="text-lg font-semibold text-[var(--text)]">오늘의 운세</h2>
           <p className="mt-0.5 text-xs text-[var(--text-muted)]">
-            KST 기준 · 날짜마다 바뀌는 참고용 한 줄입니다.
+            KST 기준 · 날짜마다 바뀌는 참고용입니다. 띠·별자리는 요약 한 줄과
+            상세 문단이 함께 표시됩니다.
           </p>
         </div>
         <time
@@ -35,21 +36,24 @@ export async function HomeDailyFortune() {
       <details className="mt-4 group">
         <summary className="cursor-pointer list-none text-sm font-medium text-[var(--text)] [&::-webkit-details-marker]:hidden">
           <span className="text-[var(--accent)] group-open:opacity-80">
-            12띠 한 줄 보기
+            12띠 운세 보기
           </span>
           <span className="ml-1 text-xs font-normal text-[var(--text-muted)]">
             (탭하여 펼치기)
           </span>
         </summary>
-        <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+        <ul className="mt-3 grid gap-3 sm:grid-cols-2">
           {ddi.map((d) => (
             <li
               key={d.name}
-              className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm"
+              className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-3 text-sm"
             >
               <span className="font-semibold text-[var(--text)]">{d.label}</span>
-              <p className="mt-1 text-[13px] leading-snug text-[var(--text-muted)]">
+              <p className="mt-1.5 text-[13px] font-medium leading-snug text-[var(--text)]">
                 {d.line}
+              </p>
+              <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-muted)]">
+                {d.detail}
               </p>
             </li>
           ))}
@@ -59,21 +63,24 @@ export async function HomeDailyFortune() {
       <details className="mt-3 group">
         <summary className="cursor-pointer list-none text-sm font-medium text-[var(--text)] [&::-webkit-details-marker]:hidden">
           <span className="text-[var(--accent)] group-open:opacity-80">
-            12별자리 한 줄 보기
+            12별자리 운세 보기
           </span>
           <span className="ml-1 text-xs font-normal text-[var(--text-muted)]">
             (탭하여 펼치기)
           </span>
         </summary>
-        <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+        <ul className="mt-3 grid gap-3 sm:grid-cols-2">
           {signs.map((s) => (
             <li
               key={s.name}
-              className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm"
+              className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-3 text-sm"
             >
               <span className="font-semibold text-[var(--text)]">{s.name}</span>
-              <p className="mt-1 text-[13px] leading-snug text-[var(--text-muted)]">
+              <p className="mt-1.5 text-[13px] font-medium leading-snug text-[var(--text)]">
                 {s.line}
+              </p>
+              <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-muted)]">
+                {s.detail}
               </p>
             </li>
           ))}

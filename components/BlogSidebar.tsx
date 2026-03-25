@@ -3,6 +3,7 @@
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SITE_NAV_LINKS } from "@/components/site-nav";
 import { AI_SCIENCE_CATEGORY_SLUG } from "@/lib/posts";
 import type { TaxonomyItem } from "@/lib/taxonomy";
 
@@ -47,7 +48,7 @@ export function BlogSidebar({
           </p>
         ) : (
           <p className="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
-            주식 · 테크 · 순위정보
+            주식 · 테크 · YouTube
           </p>
         )}
         <div className="mt-4 border-t border-[var(--border)] pt-4">
@@ -81,46 +82,15 @@ export function BlogSidebar({
         </div>
       </div>
 
-      <nav className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 shadow-sm lg:block">
-        <ul className="flex flex-row gap-1 overflow-x-auto lg:flex-col lg:overflow-visible">
-          <li>
-            <Link href="/" className={navClass}>
-              홈
-            </Link>
-          </li>
-          <li>
-            <Link href="/stocks" className={navClass}>
-              주식
-            </Link>
-          </li>
-          <li>
-            <Link href="/tech" className={navClass}>
-              테크
-            </Link>
-          </li>
-          <li>
-            <Link href="/ai-science" className={navClass}>
-              AI·과학
-            </Link>
-          </li>
-          <li>
-            <Link href="/rankings" className={navClass}>
-              순위정보
-            </Link>
-          </li>
-          <li>
-            <Link href="/youtube" className={navClass}>
-              YouTube
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/auth/login"
-              className={`${navClass} lg:hidden`}
-            >
-              {user ? "계정" : "로그인"}
-            </Link>
-          </li>
+      <nav className="hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 shadow-sm lg:block">
+        <ul className="flex flex-col gap-1">
+          {SITE_NAV_LINKS.map((item) => (
+            <li key={item.href}>
+              <Link href={item.href} className={navClass}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
 

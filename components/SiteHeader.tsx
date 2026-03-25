@@ -1,5 +1,7 @@
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
+import { MobileNav } from "@/components/MobileNav";
+import { SITE_NAV_LINKS } from "@/components/site-nav";
 import { SignOutButton } from "@/components/SignOutButton";
 
 const link =
@@ -23,24 +25,11 @@ export function SiteHeader({ user }: { user: User | null }) {
           </Link>
           <span className="hidden h-4 w-px bg-[var(--border)] sm:block" />
           <nav className="hidden flex-wrap items-center gap-x-4 gap-y-1 sm:flex">
-            <Link href="/" className={link}>
-              홈
-            </Link>
-            <Link href="/stocks" className={link}>
-              주식
-            </Link>
-            <Link href="/tech" className={link}>
-              테크
-            </Link>
-            <Link href="/ai-science" className={link}>
-              AI·과학
-            </Link>
-            <Link href="/rankings" className={link}>
-              순위정보
-            </Link>
-            <Link href="/youtube" className={link}>
-              YouTube
-            </Link>
+            {SITE_NAV_LINKS.map((item) => (
+              <Link key={item.href} href={item.href} className={link}>
+                {item.label}
+              </Link>
+            ))}
           </nav>
         </div>
 
@@ -51,6 +40,7 @@ export function SiteHeader({ user }: { user: User | null }) {
                 {short ?? "회원"}
               </span>
               <SignOutButton className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]" />
+              <MobileNav />
             </>
           ) : (
             <>
@@ -66,6 +56,7 @@ export function SiteHeader({ user }: { user: User | null }) {
               >
                 회원가입
               </Link>
+              <MobileNav />
             </>
           )}
         </div>
