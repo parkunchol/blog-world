@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { PostCard } from "@/components/PostCard";
-import { getPublishedPostsByCategorySlug } from "@/lib/posts";
+import {
+  AI_SCIENCE_CATEGORY_SLUG,
+  getPublishedPostsByCategorySlug,
+} from "@/lib/posts";
 import { getCategoryBySlug } from "@/lib/taxonomy";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogCategoryPage({ params }: Props) {
   const { slug } = await params;
+  if (slug === AI_SCIENCE_CATEGORY_SLUG) {
+    redirect("/ai-science");
+  }
   const category = await getCategoryBySlug(slug);
   if (!category) notFound();
 

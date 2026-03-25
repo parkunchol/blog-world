@@ -3,6 +3,7 @@
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AI_SCIENCE_CATEGORY_SLUG } from "@/lib/posts";
 import type { TaxonomyItem } from "@/lib/taxonomy";
 
 const navClass =
@@ -19,7 +20,10 @@ export function BlogSidebar({
 }) {
   const pathname = usePathname();
   const showBlogTaxonomy =
-    pathname === "/tech" || pathname.startsWith("/blog");
+    pathname === "/tech" ||
+    pathname.startsWith("/blog") ||
+    pathname === "/ai-science" ||
+    pathname.startsWith("/ai-science/");
 
   const label =
     user?.user_metadata?.full_name ??
@@ -95,6 +99,11 @@ export function BlogSidebar({
             </Link>
           </li>
           <li>
+            <Link href="/ai-science" className={navClass}>
+              AI·과학
+            </Link>
+          </li>
+          <li>
             <Link href="/rankings" className={navClass}>
               순위정보
             </Link>
@@ -124,7 +133,11 @@ export function BlogSidebar({
             {categories.map((c) => (
               <li key={c.id}>
                 <Link
-                  href={`/blog/category/${encodeURIComponent(c.slug)}`}
+                  href={
+                    c.slug === AI_SCIENCE_CATEGORY_SLUG
+                      ? "/ai-science"
+                      : `/blog/category/${encodeURIComponent(c.slug)}`
+                  }
                   className="block rounded-lg px-2 py-1.5 text-sm text-[var(--text-muted)] hover:bg-[var(--surface-muted)] hover:text-[var(--accent)]"
                 >
                   {c.name}

@@ -32,6 +32,9 @@ export function SiteHeader({ user }: { user: User | null }) {
             <Link href="/tech" className={link}>
               테크
             </Link>
+            <Link href="/ai-science" className={link}>
+              AI·과학
+            </Link>
             <Link href="/rankings" className={link}>
               순위정보
             </Link>

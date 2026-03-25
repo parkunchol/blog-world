@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PostCard } from "@/components/PostCard";
-import { getPublishedPosts } from "@/lib/posts";
+import {
+  AI_SCIENCE_CATEGORY_SLUG,
+  getPublishedPostsExcludingCategorySlug,
+} from "@/lib/posts";
 
 export const metadata: Metadata = {
   title: "테크",
@@ -12,7 +15,10 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function TechHomePage() {
-  const latest = await getPublishedPosts(3);
+  const latest = await getPublishedPostsExcludingCategorySlug(
+    AI_SCIENCE_CATEGORY_SLUG,
+    3,
+  );
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-10">

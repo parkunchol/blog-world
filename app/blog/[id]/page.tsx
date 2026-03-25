@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PostSourceFooter, SourceText } from "@/components/PostSource";
-import { getPublishedPostById } from "@/lib/posts";
+import { PostSourceFooter } from "@/components/PostSource";
+import { stripSourceArtifactsFromContent } from "@/lib/post-content";
+import { resolveExternalArticleUrl } from "@/lib/post-source";
+import {
+  AI_SCIENCE_CATEGORY_SLUG,
+  getPublishedPostById,
+} from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
@@ -30,13 +35,17 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getPublishedPostById(id);
   if (!post) notFound();
 
+  const isAiScience = post.category?.slug === AI_SCIENCE_CATEGORY_SLUG;
+  const body = stripSourceArtifactsFromContent(post.content);
+  const articleUrl = resolveExternalArticleUrl(post);
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <Link
-        href="/blog"
+        href={isAiScience ? "/ai-science" : "/blog"}
         className="text-sm text-[var(--text-muted)] hover:text-[var(--accent)]"
       >
-        ← 글 목록
+        {isAiScience ? "← AI·과학" : "← 글 목록"}
       </Link>
 
       <article className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-8 shadow-sm sm:px-8">
@@ -50,7 +59,11 @@ export default async function BlogPostPage({ params }: Props) {
           <div className="flex flex-wrap items-center gap-2">
             {post.category ? (
               <Link
-                href={`/blog/category/${encodeURIComponent(post.category.slug)}`}
+                href={
+                  post.category.slug === AI_SCIENCE_CATEGORY_SLUG
+                    ? "/ai-science"
+                    : `/blog/category/${encodeURIComponent(post.category.slug)}`
+                }
                 className="rounded-full bg-[var(--surface-muted)] px-3 py-1 text-xs font-medium text-[var(--text)] hover:bg-[var(--accent)]/15 hover:text-[var(--accent)]"
               >
                 {post.category.name}
@@ -75,10 +88,10 @@ export default async function BlogPostPage({ params }: Props) {
         </header>
 
         <div className="mt-8 whitespace-pre-wrap text-base leading-relaxed text-[var(--text)]">
-          {post.content}
+          {body}
         </div>
-        {post.source?.trim() ? (
-          <PostSourceFooter source={post.source} />
+        {articleUrl || post.source?.trim() ? (
+          <PostSourceFooter source={post.source} articleUrl={articleUrl} />
         ) : null}
       </article>
     </main>

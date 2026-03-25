@@ -3,30 +3,30 @@ import Link from "next/link";
 import { PostCard } from "@/components/PostCard";
 import {
   AI_SCIENCE_CATEGORY_SLUG,
-  getPublishedPostsExcludingCategorySlug,
+  getPublishedPostsByCategorySlug,
 } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "글 목록",
+  title: "AI·과학",
+  description:
+    "RSS로 모은 AI·과학 뉴스를 모아미 스타일로 요약한 글만 모았습니다.",
 };
 
-export default async function BlogIndexPage() {
-  const posts = await getPublishedPostsExcludingCategorySlug(
-    AI_SCIENCE_CATEGORY_SLUG,
-  );
+export default async function AiSciencePage() {
+  const posts = await getPublishedPostsByCategorySlug(AI_SCIENCE_CATEGORY_SLUG);
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-4 shadow-sm sm:px-6">
         <h1 className="text-xl font-bold text-[var(--text)] sm:text-2xl">
-          글 목록
+          AI·과학
         </h1>
         <p className="mt-1 text-sm text-[var(--text-muted)]">
           최신순 · 발행된 글만 표시 ·{" "}
-          <Link href="/ai-science" className="text-[var(--accent)] hover:underline">
-            AI·과학
+          <Link href="/blog" className="text-[var(--accent)] hover:underline">
+            일반 글 목록
           </Link>
         </p>
       </header>
