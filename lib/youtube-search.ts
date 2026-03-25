@@ -25,8 +25,24 @@ export type YoutubeSearchResponse = {
 
 const API = "https://www.googleapis.com/youtube/v3/search";
 
+export type YoutubeSearchOptions = {
+  /** YYYY-MM-DD — 업로드 시각이 이 날짜 00:00 UTC 이후 */
+  publishedAfterYmd?: string;
+  /** YYYY-MM-DD — 업로드 시각이 이 날짜 23:59:59.999 UTC 이전 */
+  publishedBeforeYmd?: string;
+};
+
+function ymdToPublishedAfter(ymd: string): string {
+  return `${ymd}T00:00:00.000Z`;
+}
+
+function ymdToPublishedBefore(ymd: string): string {
+  return `${ymd}T23:59:59.999Z`;
+}
+
 export async function searchCreativeCommonVideos(
   query: string,
+  options?: YoutubeSearchOptions,
 ): Promise<{ ok: true; data: YoutubeSearchResponse } | { ok: false; error: string }> {
   const key = process.env.YOUTUBE_API_KEY?.trim();
   if (!key) {
@@ -45,6 +61,16 @@ export async function searchCreativeCommonVideos(
   url.searchParams.set("videoLicense", "creativeCommon");
   /** 20분 초과 롱폼만 (API: videoDuration=long) */
   url.searchParams.set("videoDuration", "long");
+
+  const after = options?.publishedAfterYmd?.trim();
+  const before = options?.publishedBeforeYmd?.trim();
+  if (after && /^\d{4}-\d{2}-\d{2}$/.test(after)) {
+    url.searchParams.set("publishedAfter", ymdToPublishedAfter(after));
+  }
+  if (before && /^\d{4}-\d{2}-\d{2}$/.test(before)) {
+    url.searchParams.set("publishedBefore", ymdToPublishedBefore(before));
+  }
+
   url.searchParams.set("key", key);
   url.searchParams.set("maxResults", "25");
 
@@ -72,4 +98,25 @@ export function parseYoutubeQuery(
 ): string {
   const raw = Array.isArray(sp.q) ? sp.q[0] : sp.q;
   return (raw ?? "").trim().slice(0, 200);
+}
+
+/** 검색어 + 업로드 기간(YYYY-MM-DD). 시작이 끝보다 늦으면 서로 바꿉니다. */
+export function parseYoutubeSearchParams(sp: Record<string, string | string[] | undefined>): {
+  q: string;
+  from: string;
+  to: string;
+} {
+  const q = parseYoutubeQuery(sp);
+  const fromRaw = Array.isArray(sp.from) ? sp.from[0] : sp.from;
+  const toRaw = Array.isArray(sp.to) ? sp.to[0] : sp.to;
+  let from = (fromRaw ?? "").trim().slice(0, 10);
+  let to = (toRaw ?? "").trim().slice(0, 10);
+  if (from && !/^\d{4}-\d{2}-\d{2}$/.test(from)) from = "";
+  if (to && !/^\d{4}-\d{2}-\d{2}$/.test(to)) to = "";
+  if (from && to && from > to) {
+    const t = from;
+    from = to;
+    to = t;
+  }
+  return { q, from, to };
 }

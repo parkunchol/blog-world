@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { YoutubeSearchItem } from "@/lib/youtube-search";
 import {
-  parseYoutubeQuery,
+  parseYoutubeSearchParams,
   searchCreativeCommonVideos,
 } from "@/lib/youtube-search";
 
@@ -69,13 +69,16 @@ function VideoCard({ item }: { item: YoutubeSearchItem }) {
 
 export default async function YoutubeSearchPage({ searchParams }: PageProps) {
   const sp = await searchParams;
-  const q = parseYoutubeQuery(sp);
+  const { q, from, to } = parseYoutubeSearchParams(sp);
 
   let items: YoutubeSearchItem[] = [];
   let error: string | null = null;
 
   if (q) {
-    const result = await searchCreativeCommonVideos(q);
+    const result = await searchCreativeCommonVideos(q, {
+      publishedAfterYmd: from || undefined,
+      publishedBeforeYmd: to || undefined,
+    });
     if (!result.ok) {
       error = result.error;
     } else {
@@ -98,16 +101,18 @@ export default async function YoutubeSearchPage({ searchParams }: PageProps) {
           <code className="rounded bg-[var(--surface-muted)] px-1 text-xs">
             videoDuration=long
           </code>
-          (20분 초과)인 동영상만 검색합니다. API 키는 서버에서만 사용됩니다.
+          (20분 초과)인 동영상만 검색합니다. 아래 기간은{" "}
+          <strong className="text-[var(--text)]">업로드일</strong>(공개 시점) 기준입니다.
+          API 키는 서버에서만 사용됩니다.
         </p>
       </div>
 
       <form
         method="get"
         action="/youtube"
-        className="flex flex-col gap-3 sm:flex-row sm:items-end"
+        className="flex flex-col gap-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm sm:p-5"
       >
-        <label className="min-w-0 flex-1">
+        <label className="block">
           <span className="mb-1 block text-xs font-medium text-[var(--text-muted)]">
             검색어
           </span>
@@ -120,12 +125,44 @@ export default async function YoutubeSearchPage({ searchParams }: PageProps) {
             autoComplete="off"
           />
         </label>
-        <button
-          type="submit"
-          className="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90 sm:shrink-0"
-        >
-          검색
-        </button>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label>
+            <span className="mb-1 block text-xs font-medium text-[var(--text-muted)]">
+              업로드 시작일 (선택)
+            </span>
+            <input
+              type="date"
+              name="from"
+              defaultValue={from}
+              className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-2.5 text-sm text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
+            />
+          </label>
+          <label>
+            <span className="mb-1 block text-xs font-medium text-[var(--text-muted)]">
+              업로드 종료일 (선택)
+            </span>
+            <input
+              type="date"
+              name="to"
+              defaultValue={to}
+              className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-2.5 text-sm text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
+            />
+          </label>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="submit"
+            className="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90"
+          >
+            검색
+          </button>
+          <Link
+            href="/youtube"
+            className="rounded-lg border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text-muted)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          >
+            초기화
+          </Link>
+        </div>
       </form>
 
       {error ? (
