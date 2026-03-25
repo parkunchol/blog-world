@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PostSourceFooter, SourceText } from "@/components/PostSource";
 import { getPublishedPostById } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +43,7 @@ export default async function BlogPostPage({ params }: Props) {
         <header className="space-y-3 border-b border-[var(--border)] pb-6">
           <time
             dateTime={post.created_at}
-            className="text-sm text-[var(--text-muted)]"
+            className="block text-sm text-[var(--text-muted)]"
           >
             {formatDate(post.created_at)}
           </time>
@@ -76,6 +77,9 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="mt-8 whitespace-pre-wrap text-base leading-relaxed text-[var(--text)]">
           {post.content}
         </div>
+        {post.source?.trim() ? (
+          <PostSourceFooter source={post.source} />
+        ) : null}
       </article>
     </main>
   );

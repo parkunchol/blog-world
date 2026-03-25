@@ -31,7 +31,7 @@ export function BlogSidebar({
     <div className="space-y-3 lg:sticky lg:top-16">
       <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm">
         <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-muted)]">
-          moa.me
+          themoa.me
         </p>
         <p className="mt-1 text-lg font-bold text-[var(--text)]">허브</p>
         {showBlogTaxonomy ? (

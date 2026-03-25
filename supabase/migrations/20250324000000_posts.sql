@@ -6,10 +6,13 @@ create table if not exists public.posts (
   content text not null default '',
   slug text not null unique,
   excerpt text,
+  source text,
   published boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+comment on column public.posts.source is '출처(기사 매체명, URL 일부 등). 선택';
 
 create index if not exists posts_created_at_desc_idx
   on public.posts (created_at desc);

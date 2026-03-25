@@ -14,11 +14,11 @@ const notoSansKr = Noto_Sans_KR({
 
 export const metadata: Metadata = {
   title: {
-    default: "moa.me",
-    template: "%s · moa.me",
+    default: "themoa.me",
+    template: "%s · themoa.me",
   },
   description:
-    "주식, 테크, 드라마·영화·노래 순위 등 — moa.me 허브.",
+    "주식, 테크, 드라마·영화·노래 순위 등 — themoa.me 허브",
 };
 
 export default async function RootLayout({

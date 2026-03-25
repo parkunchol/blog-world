@@ -20,6 +20,7 @@ export type Post = {
   content: string;
   slug: string;
   excerpt: string | null;
+  source: string | null;
   published: boolean;
   created_at: string;
   updated_at: string;
@@ -38,6 +39,7 @@ type PostQueryRow = {
   content: string;
   slug: string;
   excerpt: string | null;
+  source: string | null;
   published: boolean;
   created_at: string;
   updated_at: string;
@@ -74,6 +76,7 @@ function normalizePost(row: PostQueryRow): Post {
     content: row.content,
     slug: row.slug,
     excerpt: row.excerpt,
+    source: row.source ?? null,
     published: row.published,
     created_at: row.created_at,
     updated_at: row.updated_at,
@@ -89,6 +92,7 @@ const postSelect = `
   content,
   slug,
   excerpt,
+  source,
   published,
   created_at,
   updated_at,

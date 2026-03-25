@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "홈",
   description:
-    "moa.me — 주식, 테크, 드라마·영화·노래 순위 등 큐레이션 허브.",
+    "themoa.me — 주식, 테크, 드라마·영화·노래 순위 등 큐레이션 허브.",
 };
 
 const sections = [
@@ -30,7 +30,7 @@ export default function HomePage() {
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-10">
       <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm sm:p-8">
-        <p className="text-sm font-medium text-[var(--accent)]">moa.me</p>
+        <p className="text-sm font-medium text-[var(--accent)]">themoa.me</p>
         <h1 className="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">
           주식, 테크, 순위를 한곳에서
         </h1>

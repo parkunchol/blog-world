@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "순위정보",
   description:
-    "드라마·영화·음원 등 순위와 화제작 — moa.me 순위정보 코너(준비 중).",
+    "드라마·영화·음원 등 순위와 화제작 — moa.me 순위정themoa.me비 중).",
 };
 
 export default function RankingsPage() {
@@ -22,7 +22,7 @@ export default function RankingsPage() {
           href="/"
           className="mt-6 inline-flex text-sm font-medium text-[var(--accent)] hover:underline"
         >
-          ← moa.me 홈
+          ← mthemoa.me홈
         </Link>
       </div>
     </main>

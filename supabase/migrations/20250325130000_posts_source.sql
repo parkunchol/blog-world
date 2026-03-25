@@ -1,6 +1,9 @@
--- OpenAI / Make 등에서 JSON 한 덩어리로 글 + 카테고리 + 태그 + post_tags 까지 처리
--- 호출: POST /rest/v1/rpc/create_blog_bundle  Body: { "payload": { ... } }
--- 보안: anon 도 실행 가능 — anon 키 유출 시 악용 가능. 공개 앱이면 나중에 Edge Function + 시크릿 권장.
+-- posts 출처 표시 + create_blog_bundle 에 source 반영
+
+alter table public.posts
+  add column if not exists source text;
+
+comment on column public.posts.source is '출처(기사 매체명, URL 일부 등). 선택';
 
 create or replace function public.create_blog_bundle(payload jsonb)
 returns uuid
@@ -71,8 +74,3 @@ $$;
 
 comment on function public.create_blog_bundle(jsonb) is
   'JSON payload: title, content, slug, excerpt?, published?, source?, category?:{name,slug}, tags?:[{name,slug}]. Returns new post id.';
-
-revoke all on function public.create_blog_bundle(jsonb) from public;
-grant execute on function public.create_blog_bundle(jsonb) to anon;
-grant execute on function public.create_blog_bundle(jsonb) to authenticated;
-grant execute on function public.create_blog_bundle(jsonb) to service_role;

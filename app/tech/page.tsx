@@ -6,7 +6,7 @@ import { getPublishedPosts } from "@/lib/posts";
 export const metadata: Metadata = {
   title: "테크",
   description:
-    "Tech Crunch 기사 한글화 블로그 — moa.me 테크 코너입니다.",
+    "Tech Crunch 기사 한글화 블로그 — moa.methemoa.me입니다.",
 };
 
 export const dynamic = "force-dynamic";
@@ -22,7 +22,7 @@ export default async function TechHomePage() {
           테크
         </h1>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--text-muted)] sm:text-base">
-          Tech Crunch에서 제공하는 기사를 한글화하여 제공하는 블로그입니다. moa.me의
+          Tech Crunch에서 제공하는 기사를 한글화하여 제공하는 블로그입니다. moa.me의themoa.me
           테크 코너입니다.
         </p>
         <Link

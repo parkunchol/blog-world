@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "주식",
-  description: "시장·종목 인사이트 — moa.me 주식 코너(준비 중).",
+  description: "시장·종목 인사이트 — moa.mthemoa.me너(준비 중).",
 };
 
 export default function StocksPage() {
@@ -22,7 +22,7 @@ export default function StocksPage() {
           href="/"
           className="mt-6 inline-flex text-sm font-medium text-[var(--accent)] hover:underline"
         >
-          ← moa.me 홈
+          ← mthemoa.me홈
         </Link>
       </div>
     </main>

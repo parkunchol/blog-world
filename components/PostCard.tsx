@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Post } from "@/lib/posts";
+import { SourceText } from "@/components/PostSource";
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat("ko-KR", {
@@ -32,6 +33,18 @@ export function PostCard({ post, href }: { post: Post; href: string }) {
               >
                 {post.category.name}
               </Link>
+            </>
+          ) : null}
+          {post.source?.trim() ? (
+            <>
+              <span className="text-[var(--border)]">·</span>
+              <span className="inline-flex min-w-0 max-w-full items-baseline gap-1 text-[var(--text-muted)]">
+                <span>출처</span>
+                <SourceText
+                  source={post.source}
+                  className="inline-block max-w-[min(100%,14rem)] truncate align-bottom"
+                />
+              </span>
             </>
           ) : null}
         </div>
