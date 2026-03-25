@@ -1,30 +1,72 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { StocksSearchForm } from "@/components/stocks/StocksSearchForm";
+import { StocksTimeline } from "@/components/stocks/StocksTimeline";
+import {
+  fetchStockTimeline,
+  stockFiltersFromSearchParams,
+} from "@/lib/stock-feed";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "주식",
-  description: "시장·종목 인사이트 — moa.mthemoa.me너(준비 중).",
+  description:
+    "최근 공시·뉴스 타임라인. 종목·기간·키워드로 검색합니다. — themoa.me",
 };
 
-export default function StocksPage() {
+type PageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function StocksPage({ searchParams }: PageProps) {
+  const sp = await searchParams;
+  const filters = stockFiltersFromSearchParams(sp);
+  let filings: Awaited<
+    ReturnType<typeof fetchStockTimeline>
+  >["filings"] = [];
+  let news: Awaited<ReturnType<typeof fetchStockTimeline>>["news"] = [];
+  let loadError: string | null = null;
+
+  try {
+    const data = await fetchStockTimeline(filters);
+    filings = data.filings;
+    news = data.news;
+  } catch (e) {
+    console.error(e);
+    loadError =
+      e instanceof Error ? e.message : "데이터를 불러오지 못했습니다.";
+  }
+
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col gap-8">
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm sm:p-8">
+    <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 pb-12">
+      <div>
         <p className="text-sm font-medium text-[var(--accent)]">주식</p>
         <h1 className="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">
-          주식 코너
+          공시 · 뉴스
         </h1>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--text-muted)] sm:text-base">
-          시장 흐름, 종목 이슈, 투자 아이디어를 모을 예정입니다. 콘텐츠는 순차적으로
-          연결됩니다.
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-[var(--text-muted)] sm:text-base">
+          금융감독원 공시와 수집 중인 경제 뉴스를 날짜순으로 모아 둡니다. 아래에서
+          검색·필터를 조정할 수 있습니다.
         </p>
-        <Link
-          href="/"
-          className="mt-6 inline-flex text-sm font-medium text-[var(--accent)] hover:underline"
-        >
-          ← mthemoa.me홈
-        </Link>
       </div>
+
+      <StocksSearchForm filters={filters} />
+
+      {loadError ? (
+        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
+          {loadError}
+        </p>
+      ) : (
+        <StocksTimeline filings={filings} news={news} />
+      )}
+
+      <Link
+        href="/"
+        className="text-sm font-medium text-[var(--accent)] hover:underline"
+      >
+        ← 홈
+      </Link>
     </main>
   );
 }
