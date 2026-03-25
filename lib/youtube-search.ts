@@ -2,6 +2,11 @@
  * 서버 전용 — YOUTUBE_API_KEY 는 클라이언트에 노출하지 마세요.
  */
 
+import { defaultDateRangeKst } from "@/lib/stock-feed";
+
+/** 기간 미지정 시: KST 기준 오늘 포함 최근 14일(2주) */
+const DEFAULT_RANGE_DAYS = 14;
+
 export type YoutubeSearchItem = {
   id: { kind?: string; videoId?: string };
   snippet?: {
@@ -117,6 +122,11 @@ export function parseYoutubeSearchParams(sp: Record<string, string | string[] | 
     const t = from;
     from = to;
     to = t;
+  }
+  if (!from && !to) {
+    const def = defaultDateRangeKst(DEFAULT_RANGE_DAYS);
+    from = def.from;
+    to = def.to;
   }
   return { q, from, to };
 }

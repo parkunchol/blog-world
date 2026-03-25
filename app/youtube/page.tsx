@@ -102,7 +102,9 @@ export default async function YoutubeSearchPage({ searchParams }: PageProps) {
             videoDuration=long
           </code>
           (20분 초과)인 동영상만 검색합니다. 아래 기간은{" "}
-          <strong className="text-[var(--text)]">업로드일</strong>(공개 시점) 기준입니다.
+          <strong className="text-[var(--text)]">업로드일</strong>(공개 시점) 기준이며, 날짜를
+          비우면 <strong className="text-[var(--text)]">당일 포함 최근 2주(KST)</strong>가
+          기본입니다.
         </p>
       </div>
 
