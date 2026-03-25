@@ -52,7 +52,72 @@ export type DartFilingRow = {
   url: string;
 };
 
-const LIMIT = 200;
+export type StockTimelineItem =
+  | { kind: "filing"; sortAt: number; filing: DartFilingRow }
+  | { kind: "news"; sortAt: number; news: RssItemRow };
+
+const FETCH_LIMIT = 200;
+const DISPLAY_LIMIT_MAX = 500;
+
+/** 타임라인 한 번에 더 보여 줄 개수 (기본 노출도 동일) */
+export const STOCK_DISPLAY_STEP = 10;
+
+function filingSortAt(f: DartFilingRow): number {
+  return new Date(`${f.rcept_dt}T23:59:59+09:00`).getTime();
+}
+
+function newsSortAt(n: RssItemRow): number {
+  return new Date(n.published_at).getTime();
+}
+
+/** 공시·뉴스를 최신순 한 줄로 합침 */
+export function mergeStockTimeline(
+  filings: DartFilingRow[],
+  news: RssItemRow[],
+): StockTimelineItem[] {
+  const items: StockTimelineItem[] = [
+    ...filings.map((f) => ({
+      kind: "filing" as const,
+      sortAt: filingSortAt(f),
+      filing: f,
+    })),
+    ...news.map((n) => ({
+      kind: "news" as const,
+      sortAt: newsSortAt(n),
+      news: n,
+    })),
+  ];
+  items.sort((a, b) => b.sortAt - a.sortAt);
+  return items;
+}
+
+/** URL `limit`: 기본 10, 최대 500 */
+export function parseDisplayLimit(
+  sp: Record<string, string | string[] | undefined>,
+): number {
+  const raw = Array.isArray(sp.limit) ? sp.limit[0] : sp.limit;
+  const n = parseInt(String(raw ?? ""), 10);
+  if (Number.isNaN(n) || n < STOCK_DISPLAY_STEP) return STOCK_DISPLAY_STEP;
+  return Math.min(DISPLAY_LIMIT_MAX, n);
+}
+
+/** 검색 폼 제출 시 limit 초기화용: 쿼리에 limit 없음 → 10 */
+export function buildStocksQueryString(
+  filters: StockFeedFilters,
+  displayLimit: number,
+): string {
+  const p = new URLSearchParams();
+  if (filters.q) p.set("q", filters.q);
+  if (filters.code) p.set("code", filters.code);
+  p.set("from", filters.from);
+  p.set("to", filters.to);
+  p.set("type", filters.type);
+  if (filters.dartKw) p.set("dart_kw", filters.dartKw);
+  if (filters.feedId) p.set("feed", filters.feedId);
+  if (displayLimit > STOCK_DISPLAY_STEP) p.set("limit", String(displayLimit));
+  const s = p.toString();
+  return s ? `?${s}` : "";
+}
 
 function clip(s: string, n: number): string {
   return s.trim().slice(0, n);
@@ -130,7 +195,7 @@ export async function fetchStockTimeline(
         "id,rcept_no,rcept_dt,corp_name,report_nm,stock_code,url",
       )
       .order("rcept_dt", { ascending: false })
-      .limit(LIMIT);
+      .limit(FETCH_LIMIT);
 
     dq = dq.gte("rcept_dt", from).lte("rcept_dt", to);
 
@@ -154,7 +219,7 @@ export async function fetchStockTimeline(
       .from("rss_items")
       .select("id,feed_id,url,title,published_at,stock_codes")
       .order("published_at", { ascending: false })
-      .limit(LIMIT);
+      .limit(FETCH_LIMIT);
 
     nq = nq
       .gte("published_at", dayStartKstIso(from))

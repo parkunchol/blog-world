@@ -24,6 +24,12 @@ const sections = [
     label: "순위정보",
     description: "드라마·영화·음원 등 차트와 화제 순위를 다룹니다.",
   },
+  {
+    href: "/youtube",
+    label: "Youtube 검색",
+    description:
+      "CC 라이선스 동영상만 검색합니다. 롱폼(20분 초과) 위주로 볼 수 있습니다.",
+  },
 ] as const;
 
 export default function HomePage() {
@@ -35,8 +41,9 @@ export default function HomePage() {
           주식, 테크, 순위를 한곳에서
         </h1>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--text-muted)] sm:text-base">
-          주식 인사이트, 테크 뉴스(Tech Crunch Blog), 드라마·영화·노래 순위 같은
-          화제 정보까지 섹션별로 모아 갑니다. 아래에서 들어갈 코너를 고르세요.
+          주식 인사이트, 테크 뉴스(Tech Crunch Blog), 드라마·영화·노래 순위,
+          Creative Commons 동영상 검색까지 섹션별로 모아 갑니다. 아래에서 들어갈
+          코너를 고르세요.
         </p>
       </section>
 

@@ -3,7 +3,11 @@ import Link from "next/link";
 import { StocksSearchForm } from "@/components/stocks/StocksSearchForm";
 import { StocksTimeline } from "@/components/stocks/StocksTimeline";
 import {
+  buildStocksQueryString,
   fetchStockTimeline,
+  mergeStockTimeline,
+  parseDisplayLimit,
+  STOCK_DISPLAY_STEP,
   stockFiltersFromSearchParams,
 } from "@/lib/stock-feed";
 
@@ -22,6 +26,7 @@ type PageProps = {
 export default async function StocksPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const filters = stockFiltersFromSearchParams(sp);
+  const displayLimit = parseDisplayLimit(sp);
   let filings: Awaited<
     ReturnType<typeof fetchStockTimeline>
   >["filings"] = [];
@@ -37,6 +42,14 @@ export default async function StocksPage({ searchParams }: PageProps) {
     loadError =
       e instanceof Error ? e.message : "데이터를 불러오지 못했습니다.";
   }
+
+  const merged = mergeStockTimeline(filings, news);
+  const visible = merged.slice(0, displayLimit);
+  const hasMore = merged.length > visible.length;
+  const moreHref =
+    hasMore && !loadError
+      ? `/stocks${buildStocksQueryString(filters, displayLimit + STOCK_DISPLAY_STEP)}`
+      : null;
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 pb-12">
@@ -58,7 +71,12 @@ export default async function StocksPage({ searchParams }: PageProps) {
           {loadError}
         </p>
       ) : (
-        <StocksTimeline filings={filings} news={news} />
+        <StocksTimeline
+          visible={visible}
+          hasMore={hasMore}
+          moreHref={moreHref}
+          totalMerged={merged.length}
+        />
       )}
 
       <Link

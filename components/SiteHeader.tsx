@@ -35,6 +35,9 @@ export function SiteHeader({ user }: { user: User | null }) {
             <Link href="/rankings" className={link}>
               순위정보
             </Link>
+            <Link href="/youtube" className={link}>
+              YouTube
+            </Link>
           </nav>
         </div>
 

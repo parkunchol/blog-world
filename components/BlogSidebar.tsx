@@ -100,6 +100,11 @@ export function BlogSidebar({
             </Link>
           </li>
           <li>
+            <Link href="/youtube" className={navClass}>
+              YouTube
+            </Link>
+          </li>
+          <li>
             <Link
               href="/auth/login"
               className={`${navClass} lg:hidden`}
